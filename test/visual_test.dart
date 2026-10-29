@@ -5,12 +5,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soundbox/Principal.dart';
 
 void main() {
-  testWidgets('Capturar a página principal do SoundBox', (tester) async {
-    tester.view.physicalSize = const Size(390, 1320);
-    tester.view.devicePixelRatio = 1;
-    addTearDown(tester.view.resetPhysicalSize);
-    addTearDown(tester.view.resetDevicePixelRatio);
+  TestWidgetsFlutterBinding.ensureInitialized();
 
+  setUpAll(() async {
     final fontDir = Platform.environment['FLUTTER_ROOT']!;
     final roboto = FontLoader('Roboto');
     for (final name in ['Roboto-Regular.ttf', 'Roboto-Bold.ttf']) {
@@ -21,7 +18,13 @@ void main() {
     final icons = FontLoader('MaterialIcons')
       ..addFont(rootBundle.load('fonts/MaterialIcons-Regular.otf'));
     await icons.load();
+  });
 
+  testWidgets('Capturar a página principal do SoundBox', (tester) async {
+    tester.view.physicalSize = const Size(390, 1320);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(const Principal());
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
